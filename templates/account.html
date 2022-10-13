@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="../static/css/style.css">
+
+
+</head>
+<body>
+
+
+
+
+   <!-- create  a section with class row,
+    inside the section create two divs one with col-lg-6 and insert an image -->
+    <!-- Bootstrap Navbar -->
+    <!-- navbar- navigation bar  used to navigate from one webpage/document to another in a webite-->
+
+    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-primary p-3">
+        <a href="#" class="navbar-brand text-white"><img src="images/quickmart.png"
+             width="40" height="40" alt=""> Quickmart</a>
+
+            <!-- button for links -->
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
+            data-bs-target="#navbarcollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        <div class="collapse navbar-collapse" id="navbarcollapse">
+            <div class="navbar-nav">
+                <a href="home.html" class="nav-item nav-link active btn btn-success text-white me-2">Home</a>
+                <a href="about.html" class="nav-item nav-link btn btn-success text-white me-2">About</a>
+                <div class="nav-item dropdown ">
+                    <a href="#" class="dropdown-toggle nav-item nav-link btn btn-success text-white me-2"
+                    data-bs-toggle="dropdown">Products</a>
+                    <div class="dropdown-menu">
+                        <a href="services.html" class="dropdown-item bg-secondary text-white">Cereals</a>
+                        <a href="#" class="dropdown-item bg-secondary text-white">Drinks</a>
+                        <a href="#" class="dropdown-item bg-secondary text-white">Vegetables</a>
+                        <a href="#" class="dropdown-item bg-secondary text-white">Meat</a>
+                    </div>
+                </div>
+                <a href="contact.html" class="nav-item nav-link btn btn-success text-white me-2">Contact Us</a>
+            </div>
+        </div>
+        <!-- search form  -->
+        <form action="" class="d-flex">
+            <div class="input-group">
+                <input type="text" placeholder="Search"
+                class="form-control">
+                <button type="button" class="btn btn-success" >Search
+                    <i class="bi-search"></i>
+                </button>
+            </div>
+        </form>
+        <a href="login.html" class="nav-link nav-item text-dark">
+           <div class="dropdown ">
+                                            <span>
+                                                <img src="../static/images/admin.jpg" alt=""
+                                                class="img-fluid rounded-circle shadow"
+                                                width="30">
+                                                <b>
+                                                    {% if 'email' in session %}
+                                                          {{ session['name']}}
+                                                    {% endif %}
+                                                </b>
+                                            </span>
+                                            <div class="dropdown-content" style="width: 100%;">
+                                                  {% if 'email' in session %}
+                                                          {{ session['name']}}
+                                                    {% endif %}
+                                                <ul>
+                                                    <li>
+                                                        <a href="/logout" class="mylinks"
+                                                        onclick="return confirm('Are you sure?');">Logout</a>
+                                                    </li>
+
+
+
+                                                    <li>
+                                                        <a href="" class="mylinks">Profile</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="" class="mylinks">Settings</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                 </div>
+
+        </a>
+    </nav>
+    <!-- end of navbar -->
+<!--contact us
+    name email address phone comments-->
+<!--ask questions-->
+
+
+
+</body>
+</html>

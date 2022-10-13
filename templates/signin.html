@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href=
+"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+    <i class="text-center text-danger">{{message}}</i>
+
+    <h2 class="text-primary">Signin Now</h2>
+   <div class="container mt-5">
+        <section class="row">
+            <div class="col-lg-6">
+                <img src="../static/images/admin.jpg" style="height: 400px; width: 100%;" alt="">
+            </div>
+            <div class="col-lg-6  p-3" >
+                <h2 class="text-primary">Login Form</h2>
+                <form action="/signin" class="form-group" method="post">
+                    <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+                        <p class="lead fw-normal mb-0 me-3">Sign in with</p>
+                                    <button type="button" class="btn btn-muted btn-floating mx-1">
+                          <i class="fa fa-facebook-f link-primary" style="font-size:30px;"></i>
+                        </button>
+                         <button type="button" class="btn btn-muted btn-floating mx-1">
+                          <i class="fa fa-google link-primary" style="font-size:30px;"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-muted btn-floating mx-1">
+                          <i class="fa fa-twitter link-primary" style="font-size:30px;"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-muted btn-floating mx-1">
+                          <i class="fa fa-linkedin link-primary" style="font-size:30px;"></i>
+                        </button>
+                    </div>
+                    <b style="color:red;">{{message}}</b> <br>
+                    <div class="form-outline mb-4">
+                        <select name="" id="" >
+                        <option value="">ID Number</option>
+                        <option value="">Ussername</option>
+                        <option value="">Passport</option>
+                        </select>
+                        <input type="text">
+                        <input type="email" name="email" id="email" required placeholder="Enter a valid email address"
+                               class="form-control form-control-md mt-3">
+                        <input type="password" name="password" required placeholder="password" class="form-control form-control-md mt-3">
+                        <span id="error1Alert" style="color:red;"></span>
+                        <div class="d-flex justify-content-between align-items-center">
+                    <!-- Checkbox -->
+                        <a href="#!" class="text-body">Forgot password?</a>
+                        </div>
+                        <div class="text-center text-md-start mt-3 pt-2">
+                            <button type="submit" class="btn btn-primary btn-lg"
+                              style="padding-left: 2.5rem; padding-right: 2.5rem;" id="btn">Login</button>
+                            <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/signup"
+                            class="link-danger">Register</a></p>
+                      </div>
+
+
+                    </div>
+
+                </form>
+                <span id="successAlert" style="color:green;"></span>
+                <span id="error2Alert"></span>
+
+            </div>
+
+        </section>
+    </div>
+
+    </div>
+
+</div>
+
+<script src="https://static.jamboshop.com/media/common/js/jquery.min.js" type="text/javascript">
+	</script>
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>
