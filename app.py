@@ -5,7 +5,7 @@ app=Flask(__name__)
 from functions import *
 from cryptography.fernet import Fernet
 
-
+con = pymysql.connect(host='localhost', user='root', password='', database='MyShop_DB')
 app.secret_key='cjbcjhgiwudygfuw4686ojnnc<mwkhiutn'
 @app.route("/signup", methods=["POST","GET"])
 def main():
@@ -206,7 +206,7 @@ def mpesa_payment():
             print (response.text)
             return render_template('payment.html', msg = 'Please Complete Payment in Your Phone')
         else:
-            return redirect('/single/{{row[5]}}')
+            return redirect('/single/{{row[1]}}')
 
 
 # add to cart route
@@ -216,12 +216,12 @@ def add_product_to_cart():
         _code = request.form['code']
         # validate the received values
         if _quantity and _code and request.method == 'POST':
-            cursor = connection.cursor(pymysql.cursors.DictCursor)
+            cursor = con.cursor(pymysql.cursors.DictCursor)
             cursor.execute("SELECT * FROM products WHERE product_id= %s", _code)
             row = cursor.fetchone()
             #An array is a collection of items stored at contiguous memory locations. The idea is to store multiple items of the same type together
 
-            itemArray = {row['product_id']: {'product_name': row['product_name'], 'product_id': row['product_id'], 'quantity': _quantity, 'product_cost': row['product_cost'],
+            itemArray = {str(row['product_id']): {'product_name': row['product_name'], 'product_id': row['product_id'], 'quantity': _quantity, 'product_cost': row['product_cost'],
                               'image_url': row['image_url'], 'total_price': _quantity * row['product_cost'],
                                              'product_brand': row['product_brand']}}
             print((itemArray))
@@ -233,11 +233,16 @@ def add_product_to_cart():
             #if there is an item already
             if 'cart_item' in session:
                 #check if the product you are adding is already there
-                if row['product_id'] in session['cart_item']:
+                print("The test cart",type(row['product_id']) )
+                print("session hf", session['cart_item'])
+                if str(row['product_id']) in session['cart_item']:
+                    print("reached here 1")
+
 
                     for key, value in session['cart_item'].items():
                         #check if product is there
-                        if row['product_id'] == key:
+                        if str(row['product_id']) == key:
+                            print("reached here 2")
                             #take the old quantity  which is in session with cart item and key quantity
                             old_quantity = session['cart_item'][key]['quantity']
                             #add it with new quantity to get the total quantity and make it a session
@@ -247,6 +252,7 @@ def add_product_to_cart():
                             session['cart_item'][key]['total_price'] = total_quantity * row['product_cost']
 
                 else:
+                    print("reached here 3")
                     #a new product added in the cart.Merge the previous to have a new cart item with two products
                     session['cart_item'] = array_merge(session['cart_item'], itemArray)
 
@@ -262,7 +268,7 @@ def add_product_to_cart():
                 session['cart_item'] = itemArray
                 all_total_quantity = all_total_quantity + _quantity
                 #get total price by multiplyin the cost and the quantity
-                all_total_price = all_total_price + _quantity * row['product_cost']
+                all_total_price = all_total_price + _quantity * float(row['product_cost'])
 
 
             #add total quantity and total price to a session
@@ -272,8 +278,161 @@ def add_product_to_cart():
         else:
             return 'Error while adding item to cart'
 
+# function for joining arrays , we have the first array and second array
+# if a customer adds an item to a cart ,we take note,
+# if they aadd another item , then merge the arrays to get the total items in one list
+
+def array_merge( first_array , second_array ):
+     if isinstance( first_array , list) and isinstance( second_array , list ):
+      return first_array + second_array
+     #takes the new product add to the existing and merge to have one array with two products
+     elif isinstance( first_array , dict ) and isinstance( second_array , dict ):
+      return dict( list( first_array.items() ) + list( second_array.items() ) )
+     elif isinstance( first_array , set ) and isinstance( second_array , set ):
+      return first_array.union( second_array )
+     return False
+
+# delete route
+@app.route('/delete/<string:code>')
+def delete_product(code):
+    try:
+        all_total_price = 0
+        all_total_quantity = 0
+        session.modified = True
+        for item in session['cart_item'].items():
+            if item[0] == code:
+                session['cart_item'].pop(item[0], None)
+                if 'cart_item' in session:
+                    for key, value in session['cart_item'].items():
+                        individual_quantity = int(session['cart_item'][key]['quantity'])
+                        individual_price = float(session['cart_item'][key]['total_price'])
+                        all_total_quantity = all_total_quantity + individual_quantity
+                        all_total_price = all_total_price + individual_price
+                break
+
+        if all_total_quantity == 0:
+            session.clear()
+        else:
+            session['all_total_quantity'] = all_total_quantity
+            session['all_total_price'] = all_total_price
+
+        # return redirect('/') the cart function
+        return redirect(url_for('.cart'))
+    except Exception as e:
+        print(e)
+# empty cart route
+@app.route('/empty')
+def empty_cart():
+    try:
+        if 'cart_item' in session or 'all_total_quantity' in session or 'all_total_price' in session:
+            session.pop('cart_item', None)
+            session.pop('all_total_quantity', None)
+            session.pop('all_total_price', None)
+            return redirect(url_for('.cart'))
+        else:
+            return redirect(url_for('.cart'))
+
+    except Exception as e:
+        print(e)
+
+#
+@app.route('/cart')
+def cart():
+    return render_template('cart.html')
+
+def check_customer():
+    if 'email' in session:
+        return True
+    else:
+        return False
 
 
+@app.route('/customer_checkout')
+def customer_checkout():
+    if check_customer():
+            return redirect('/cart')
+    else:
+        return redirect('/signin')
+
+
+
+# # checkout route
+# from  order_gen import random_string_generator
+# #checkout route
+# @app.route('/proceed_checkout', methods = ['POST','GET'])
+# def proceed_checkout():
+#     if check_customer():
+#         if 'cart_item' in  session:
+#             if request.method == 'POST':
+#                 mpesa_code = request.form['mpesa_code']
+#                 all_total_price = 0
+#                 all_total_quantity = 0
+#                 # Need to check database******************
+#                 order_code = random_string_generator()
+#                 for key, value in session['cart_item'].items():
+#                     individual_quantity = int(session['cart_item'][key]['quantity'])
+#                     individual_price = float(session['cart_item'][key]['total_price'])
+#                     product_id = session['cart_item'][key]['product_id']
+#                     product_name = session['cart_item'][key]['product_name']
+#                     product_cost = session['cart_item'][key]['product_cost']
+#
+#                     all_total_quantity = all_total_quantity + individual_quantity
+#                     all_total_price = all_total_price + individual_price
+#                     print('Individual qqty',individual_quantity)
+#                     print('Individual price',individual_price)
+#                     print('product_id', product_id)
+#                     print('product name', product_name)
+#                     print('Total qtty', all_total_quantity)
+#                     print('Total price', all_total_price)
+#                     print("=================")
+#                     email = session['tel']
+#                     #session
+#                     if not email:
+#                         flash('Sorry, Error Occured during checkout, Try Again', 'danger')
+#                         return redirect('/signin')
+#                     elif not individual_price or not individual_quantity or not product_id or not product_name or not all_total_price or not all_total_quantity:
+#                         flash('Sorry, Error Occured during checkout, Try Again', 'danger')
+#                         return redirect('/cart')
+#                     else:
+#                         try:
+#                             sql = 'INSERT INTO `orders`(`product_name`, `product_qtty`, `product_cost`, `email`, `order_code`, `mpesa_confirmation`, `individual_total`, `all_total_price`) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)'
+#                             cursor = con.cursor()
+#                             cursor.execute(sql, (product_name, individual_quantity, product_cost, email, order_code, mpesa_code, individual_price, all_total_price))
+#                             con.commit()
+#
+#                         except Exception as e:
+#                             print(e)
+#                             flash('Sorry, Error occured during checkout, Please try again','danger')
+#                             return redirect('/cart')
+#
+#                 print('================')
+#                 print('Total qtty', all_total_quantity)
+#                 print('Total price', all_total_price)
+#                 try:
+#                     sql2 = 'update orders set all_total_price = %s where order_code = %s'
+#                     cursor = con.cursor()
+#                     #it updates all the products to have the same price in the same order in the all total price column
+#                     cursor.execute(sql2,(all_total_price, order_code))
+#                     con.commit()
+#                     flash('Your Order is Complete, Please check your Orders in Your Profile','success')
+#                     session.pop('cart_item', None)
+#                     session.pop('all_total_quantity', None)
+#                     session.pop('all_total_price', None)
+#                     print('here')
+#                     return redirect(url_for('cart'))
+#                 except:
+#                     flash('Sorry, Error occured during checkout, Please try again','danger')
+#                     session.pop('cart_item', None)
+#                     session.pop('all_total_quantity', None)
+#                     session.pop('all_total_price', None)
+#                     return redirect('/cart')
+#             else:
+#                 return redirect('/cart')
+#         else:
+#             return redirect('/cart')
+#     else:
+#         flash('You must be logged in to Make a Purchase, Please Login', 'warning')
+#         return redirect('/signin')
 
 app.run(debug=True)
 

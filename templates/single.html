@@ -13,15 +13,34 @@
         <h3>{{row[1]}}</h3>
         <div class="row">
             <div class="col-md-4 card shadow p-4 ms-4">
-                <img src="../static/{{row[5]}}" alt="" height="250" width="100%">
+                <img src="../static/images/{{row[7]}}" alt="" height="250" width="100%">
             </div>
             <div class="col-md-6">
-                <p class="text-muted p-2">{{row[4]}}</p>
-                <h4 class="text-warning">{{row[3]}} </h4>
-                <i> {{[2]}}</i><br>
+              <div class="card-title"><b class="text-medium">{{row[1]}}</b></div>
+                        <div class="card-text"><i class="text-small"> {{row[2]}}</i> <br>
+                            <i class="text-small" ><b> {{row[3]}}</b></i> <br>
+                             <i class="text-small" ><b> {{row[4]}}</b></i>
 
             </div>
             <button  type="submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#mymodal">BUY</button>
+
+                 <legend>
+                <section>
+
+                            <form action="/add" method="post" class="form-control col-sm-1" ><br><br><br>   <p class="text-muted">Enter Quantity</p><br>
+                                 <input type="hidden" name="code" value="{{row[0]}}"/>
+                                 <input type="number" name="quantity" placeholder="Qtty"  required><br><br>
+                                <h5 class="text-warning">Price :&nbspKSH &nbsp{{row[3]}}</h5><br>
+                                 <button type="submit" class="btn btn-danger">ADD TO CART</button>
+                                <br><br>
+
+                                <br>
+                            </form>
+
+                    <br>
+
+                </section>
+        </main></legend>
 
             <div id="mymodal" class="modal fade" tabindex="-1">
                 <div class="modal-dialog modal-dialog-centered">

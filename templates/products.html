@@ -99,14 +99,18 @@
             <div class="col-md-3">
                 <div class="card text-center mb-3" style="height:550px;">
                      <div class="card-header bg-secondary" >
-                        <p class="text-white ">product promotion %</p>
+                        <p class="text-white ">product promotion 20% off</p>
 
                     </div>
-                    <img src="../static/images/{{row[4]}}" style="height:150px; width:120px;" class="image-fluid">
+                    <img src="../static/images/{{row[7]}}" style="height:150px; width:120px;" class="image-fluid">
 
                     <div class="card-body">
-                        <div class="card-title"><b class="text-medium">{{row[0]}}</b></div>
-                        <div class="card-text"><i class="text-small">Description : {{row[1]}}</i></div>
+                        <div class="card-title"><b class="text-medium">{{row[1]}}</b></div>
+                        <div class="card-text"><i class="text-small"> {{row[2]}}</i> <br>
+                            <i class="text-small" ><b> {{row[3]}}</b></i>
+                             <i class="text-small" ><b> {{row[4]}}</b></i>
+
+                        </div>
 
                     </div>
                     <div class="card-footer"><button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#mybutton"><a href="/single/{{row[0]}}" style="text-decoration:none; color:white;">Buy Now</a> </button></div>

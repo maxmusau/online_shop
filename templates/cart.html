@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+        <link href="../static/css/style.css" rel="stylesheet">
+</head>
+<body>
+ <br>
+                                    {% with messages = get_flashed_messages(with_categories=true) %}
+                                       {% if messages %}
+                                          {% for category, message in messages %}
+                                             <div class="alert alert-{{category}}" role="alert">
+                                                 {{ message }}
+                                             </div>
+                                          {% endfor %}
+                                       {% endif %}
+                                    {% endwith %}
+                                    <br>
+ {% if 'cart_item' in session %}
+           <p><a id="btnEmpty" href="{{ url_for('.empty_cart') }}" class="btn btn-danger">Empty Cart</a></p>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th class="text-center">Unit Price</th>
+                        <th class="text-center">Price</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+<!--                set the variable quantity and product cost and item price-->
+                {% for key, val in session['cart_item'].items() %}
+                 {% set quantity = session['cart_item'][key]['quantity'] %}
+                 {% set product_cost = session['cart_item'][key]['product_cost'] %}
+                 {% set item_price = session['cart_item'][key]['total_price'] %}
+                    <tr>
+                        <td class="col-sm-8 col-md-6">
+                        <div class="media">
+                            <a class="thumbnail pull-left" href="">
+                                <img class="media-object" width="150" height="150"
+                                     src="../static/images/{{ session['cart_item'][key]['image_url'] }}"
+                                     > </a>
+                             <div class="text-muted">
+                               <i> <h5>
+                                        {{ session['cart_item'][key]['product_name'] }}
+                                        Brand <span class="text-info">{{ session['cart_item'][key]['product_brand'] }}</span>
+
+                                </h5></i>
+                            </div>
+                        </div></td>
+                        <td class=" col-md-3" style="text-align: center">
+                        <input type="email" class="form-control col-sm" value="{{ quantity }}">
+                        </td>
+                        <td class="col-sm-1 col-md-1 text-center"><strong>KSH &nbsp{{ product_cost }} </strong></td>
+                        <td class="col-sm-1 col-md-1 text-center"><strong>KSH &nbsp{{ item_price }} </strong></td>
+                        <td class="col-sm-1 col-md-1">
+                        <a href="{{ url_for('.delete_product', code=session['cart_item'][key]['product_id']) }}" class="btn btn-danger">
+                            <span class="fa fa-trash"></span> Remove
+                        </a></td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="4"><h5>Total Quantity</h5></td>
+                        <td class="text-right"><h5><strong>{{ session['all_total_quantity'] }}</strong></h5></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><h4>Total</h4></td>
+                        <td colspan="2" class="text-right"><h4><strong>$ {{ session['all_total_price'] }}</strong></h4></td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                        <a href="/getproducts" class="btn btn-info">
+                            <span class="fa fa-shopping-cart"></span> Continue Shopping
+                        </a>
+                        </td>
+                         <td>
+                         {% if 'customer_id' in session %}
+                               <form action="/proceed_checkout" method="post">
+                                   <input type="text" name="mpesa_code" placeholder="Enter Your MPESA Code">
+                                   <input type="submit" class="btn btn-info" value="Checkout">
+                               </form>
+                             <br><br>
+
+                             <a href="/logout">Logout</a>
+
+
+                         {% else %}
+                            <a href="/customer_checkout" class="btn btn-info">
+                                 Checkout <span class="fa fa-check"></span>
+                            </a>
+                         {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-6">
+
+                </div>
+
+            </div>
+          {% else %}
+            <br>
+           <div class="no-records alert alert-info">Your Cart is Empty, Please continue shopping</div>
+            <br>
+
+            <a href="/" class="btn btn-info">
+                            <span class="fa fa-shopping-cart"></span> Continue Shopping
+            </a>
+
+             <a href="/customer_account" class="btn btn-info">
+                            <span class="fa fa-user"></span> My Profile
+            </a>
+          {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>
