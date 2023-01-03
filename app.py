@@ -104,7 +104,7 @@ def getproducts():
         name=request.form['name']
 
         con = pymysql.connect(host='localhost', user='root', password='', database='MyShop_DB')
-        sql = "SELECT * FROM `products` where name LIKE '%{}%' ".format(name)
+        sql = "SELECT * FROM `products` where product_name LIKE '%{}%' ".format(name)
         cursor = con.cursor()
         # EXECUTE SQL
         cursor.execute(sql)
@@ -158,6 +158,9 @@ def mpesa_payment():
             phone = str(request.form['phone'])
             amount = str(request.form['amount'])
             # GENERATING THE ACCESS TOKEN
+            #J4VsULza2T57hrnZLqSAT5Am9wLI4G20
+            # consumer_key = "J4VsULza2T57hrnZLqSAT5Am9wLI4G20"
+            # consumer_secret = "caTx8W0AI1wk3Up2"
             consumer_key = "GTWADFxIpUfDoNikNGqq1C3023evM6UH"
             consumer_secret = "amFbAoUByPV2rM5A"
 
@@ -282,7 +285,7 @@ def add_product_to_cart():
 # if a customer adds an item to a cart ,we take note,
 # if they aadd another item , then merge the arrays to get the total items in one list
 
-def array_merge( first_array , second_array ):
+def array_merge( first_array, second_array ):
      if isinstance( first_array , list) and isinstance( second_array , list ):
       return first_array + second_array
      #takes the new product add to the existing and merge to have one array with two products

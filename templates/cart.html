@@ -5,19 +5,24 @@
     <title>Title</title>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
         <link href="../static/css/style.css" rel="stylesheet">
+         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href=
+"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+
+
 </head>
 <body>
  <br>
-                                    {% with messages = get_flashed_messages(with_categories=true) %}
-                                       {% if messages %}
-                                          {% for category, message in messages %}
-                                             <div class="alert alert-{{category}}" role="alert">
-                                                 {{ message }}
-                                             </div>
-                                          {% endfor %}
-                                       {% endif %}
-                                    {% endwith %}
-                                    <br>
+<!--                                    {% with messages = get_flashed_messages(with_categories=true) %}-->
+<!--                                       {% if messages %}-->
+<!--                                          {% for category, message in messages %}-->
+<!--                                             <div class="alert alert-{{category}}" role="alert">-->
+<!--                                                 {{ message }}-->
+<!--                                             </div>-->
+<!--                                          {% endfor %}-->
+<!--                                       {% endif %}-->
+<!--                                    {% endwith %}-->
+<!--                                    <br>-->
  {% if 'cart_item' in session %}
            <p><a id="btnEmpty" href="{{ url_for('.empty_cart') }}" class="btn btn-danger">Empty Cart</a></p>
             <table class="table table-hover">
